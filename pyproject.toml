@@ -1,0 +1,92 @@
+[tool.poetry]
+name = "goat_data-preparation"
+version = "1.0.0"
+description = "Data preparation scripts for GOAT."
+authors = ["EPajares <elias.pajares@plan4better.de>"]
+readme = "README.md"
+keywords = ["GOAT", "API", "Spatial", "Data"]
+
+
+[tool.black]
+line-length = 88
+target-version = [ "py310", "py311" ]
+exclude = "((.eggs | .git | .pytest_cache | build | dist))"
+
+[tool.ruff]
+line-length = 88
+exclude = [".git", "__pycache__", ".mypy_cache", ".pytest_cache"]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    # "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "B904",
+    "B006",    
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+
+[tool.poetry.dependencies]
+python = ">3.9,<3.12"
+geopandas = "0.12.2"
+Cython = "0.29.24"
+geojson = "2.5.0"
+psycopg2 = "2.9.2"
+argparse = "^1.4.0"
+h3 = "^3.7.3"
+python-decouple = "^3.6"
+psutil = "^5.9.0"
+rich = "^12.4.4"
+boto3 = "^1.26.50"
+SQLAlchemy = "1.4.23"
+pyarrow = "^10.0.1"
+shapely = "2.0.0"
+connectorx = "^0.3.1"
+cdifflib = "^1.2.6"
+diff-match-patch = "^20200713"
+requests = "^2.28.2"
+typer = "^0.7.0"
+pandas = "2.0.3"
+openpyxl = "^3.1.2"
+polars = "^0.20.2"
+pyspark = "~3.4"
+apache-sedona = {extras = ["spark"], version = "^1.5.0"}
+pydeck = "^0.8.0"
+tqdm = "^4.66.1"
+pydantic = "^2.5.3"
+keplergl = "^0.3.2"
+geoalchemy2 = "^0.14.3"
+python-keycloak = "^4.0.1"
+
+[tool.poetry.dev-dependencies]
+debugpy = "^1.4.1"
+ruff = "^0.0.269"
+black = "^23.3.0"
+pytest = "^7.3.2"
+pytest-asyncio = "^0.21.0"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.11.1"
+pytest-postgresql = "^5.0.0"
+pre-commit = "^3.3.3"
+pytest-testmon = "^2.0.9"
+pytest-sugar = "^0.9.7"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 88
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

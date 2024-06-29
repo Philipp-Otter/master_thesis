@@ -1,0 +1,15 @@
+.env
+env
+venv
+src/data/input/*
+src/data/output/*
+!src/data/input/.gitkeep
+!src/data/output/.gitkeep
+__pycache__
+id_rsa
+id_rsa.pub
+
+importer/temp/
+poetry.lock
+
+nohup.out

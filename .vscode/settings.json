@@ -1,0 +1,13 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": false,
+    "workbench.editor.showTabs": "multiple",
+    "python.formatting.provider": "black",
+    "workbench.editor.showTabs": "multiple",
+    "isort.args": ["--profile", "black"],
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+}

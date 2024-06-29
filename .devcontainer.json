@@ -1,0 +1,27 @@
+// See https://aka.ms/vscode-remote/containers for the
+// documentation about the devcontainer.json format
+{
+    "name": "Master Thesis Philipp DevContainer",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/app",
+    "shutdownAction": "none",
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+		"ms-python.python",
+		"github.copilot",
+		"donjayamanne.python-extension-pack",
+		"ms-azuretools.vscode-docker",
+		"genieai.chatgpt-vscode",
+		"ms-python.black-formatter",
+        "charliermarsh.ruff",
+	],
+    "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.formatting.provider": "black",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true
+    }
+}
