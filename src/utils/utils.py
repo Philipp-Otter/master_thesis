@@ -210,7 +210,7 @@ def check_table_exists(db, table_name: str, schema: str) -> bool:
     )
     return check_if_exists[0][0]
 
-
+@timing
 def create_table_dump(
     db_config: dict, schema: str, table_name: str, dump_type: DumpType = DumpType.all
 ):
@@ -266,7 +266,7 @@ def create_table_dump(
     except Exception as e:
         print_warning(f"The following exeption happened when dumping {table_name}: {e}")
 
-
+@timing
 def restore_table_dump(
     db_config: dict, schema: str, table_name: str, dump_type: DumpType = DumpType.all
 ):

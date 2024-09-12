@@ -1,0 +1,14 @@
+FROM goatcommunity/postgres-data-preparation:latest
+
+# Wechsle zu root für die Installation
+USER root
+
+# Installiere plpython3u für PostgreSQL
+RUN apk update && \
+    apk add --no-cache postgresql-plpython3
+
+# Verwende den Benutzer aus der .env-Datei während des Builds
+ARG POSTGRES_USER
+
+# Setze den Benutzer auf den aus der .env-Datei übergebenen Wert
+USER $POSTGRES_USER
