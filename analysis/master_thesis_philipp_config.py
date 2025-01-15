@@ -606,7 +606,7 @@ poi_dicts = {
                 {
                     "max_traveltime": 30,
                     "sensitivity": 1800000,
-                    "destination_potential_column": 'bigint_attr1'
+                    "destination_potential_column": 'bigint_attr3'
                 }
             ],
             "routing_type": "walking"
@@ -617,7 +617,7 @@ poi_dicts = {
                 {
                     "max_traveltime": 30,
                     "sensitivity": 1800000,
-                    "destination_potential_column": 'bigint_attr1'
+                    "destination_potential_column": 'bigint_attr3'
                 }
             ],
             "routing_type": "bicycle"
@@ -628,7 +628,7 @@ poi_dicts = {
                 {
                     "max_traveltime": 30,
                     "sensitivity": 670000,
-                    "destination_potential_column": 'bigint_attr1',
+                    "destination_potential_column": 'bigint_attr3',
                     "static_travel_time_component": 7
                 }
             ],
@@ -640,7 +640,7 @@ poi_dicts = {
                 {
                     "max_traveltime": 30,
                     "sensitivity": 670000,
-                    "destination_potential_column": 'bigint_attr1',
+                    "destination_potential_column": 'bigint_attr3',
                     "static_travel_time_component": 7
                 }
             ],

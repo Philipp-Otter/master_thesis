@@ -301,12 +301,11 @@ class GoatAPIClient:
         self.validate_poi_category(poi_category)
         poi_category = original_category
 
-        # Determine the table based on poi_category
-        # if poi_category == 'population':
-        #     table_name = "germany_grid_25km_4326"
-        # else:
-        #     table_name = "germany_grid_50km_4326"
-        table_name = "germany_grid_50km_4326"
+        # Determine the table based on poi_category -> if missing cells add table here
+        if poi_category == 'population':
+            table_name = "germany_grid_25km_4326"
+        else:
+            table_name = "germany_grid_50km_4326"
 
         # Construct the SQL query using the determined table_name
         sql_select_id_geom = f"""
@@ -368,10 +367,16 @@ class GoatAPIClient:
                 columns = cur.fetchall()
                 column_names = ', '.join([column[0] for column in columns])
 
+                # buffer distance
+                if poi_category == 'population':
+                    buffer_distance = 5000
+                else:
+                    buffer_distance = 10000
+
                 sql_clip_poi_data = f"""
                     INSERT INTO poi_upload({column_names})
                     WITH region AS (
-                        SELECT ST_Transform(ST_Buffer(ST_Transform(ST_SetSRID(ST_GeomFromText(ST_AsText('{grid_geom}')), 4326), 3857), 10000), 4326) AS geom
+                        SELECT ST_Transform(ST_Buffer(ST_Transform(ST_SetSRID(ST_GeomFromText(ST_AsText('{grid_geom}')), 4326), 3857), {buffer_distance}), 4326) AS geom
                     )
                     SELECT DISTINCT ON (p.id) p.*
                     FROM {from_clause} p
@@ -475,7 +480,7 @@ class GoatAPIClient:
                 raise Exception(f"Failed to upload file: {response.status_code} - {response.text}")
 
     def process_file(self, folder_id, name, dataset_id):
-        url = 'http://goat_core:8000/api/v2/layer/internal'
+        url = 'http://goat_core:8000/api/v2/layer/feature-standard' #'http://goat_core:8000/api/v2/layer/internal'
         headers = {
             'accept': 'application/json'
         }
@@ -666,6 +671,7 @@ class GoatAPIClient:
                         SET heatmap_layer_id = '{error}'
                         WHERE layer_project_id = '{layer_project_id}';
                     """
+                    #TODO: store list somewhere with information about failed jobs/ layers
                     # self.db.perform(sql_update_layer_id)
                     print(f"Added heatmap creation error {error} to metadata")
                     print("Heatmap job failed.")
@@ -794,7 +800,7 @@ class GoatAPIClient:
 
     def download_and_unzip_layer(self, layer_id, file_name):
 
-        url = f'http://goat_core:8000/api/v2/layer/internal/{layer_id}/export'
+        url = f'http://goat_core:8000/api/v2/layer/{layer_id}/export' #f'http://goat_core:8000/api/v2/layer/internal/{layer_id}/export'
         headers = {
             'accept': '*/*',
             'Content-Type': 'application/json'
@@ -905,11 +911,11 @@ class GoatAPIClient:
     def clip_and_combine_heatmaps(self, poi_category, heatmap_description):
         print(f"Starting to clip and combine {heatmap_description} for POI category: {poi_category}")
 
-        # if poi_category == 'population':
-        #     table_name = "germany_grid_25km_4326"
-        # else:
-        #     table_name = "germany_grid_50km_4326"
-        table_name = "germany_grid_50km_4326"
+        # is missing cells -> add table here
+        if poi_category == 'population':
+            table_name = "germany_grid_25km_4326"
+        else:
+            table_name = "germany_grid_50km_4326"
 
         sql_get_reference_clipped_areas_of_poi_category = f"""
             SELECT reference_clipped_area
@@ -941,6 +947,8 @@ class GoatAPIClient:
             schema='temporal',
             table_name=table_name
         )
+
+        # if missing cells -> uncomment create result table!!
 
         # create result_table
         sql_create_result_table = f"""
@@ -1121,6 +1129,10 @@ if __name__ == "__main__":
                     client.delete_layer(layer_id)
                 print("Deleted all layers from project folder.")
 
+                #clear metadata table
+                Database(settings.LOCAL_DATABASE_URI).perform("DELETE FROM master_thesis_metadata;")
+                print("Cleared metadata table.")
+
                 # clear output folder?
                 # Specify the directory and prefix
                 directory = "/app/src/data/output"
@@ -1138,6 +1150,8 @@ if __name__ == "__main__":
                                 print(f"Deleted folder: {file_path}")
                         except Exception as e:
                             print(f"Failed to delete {file_path}. Reason: {e}")
+
+        print("Finished calculating heatmaps for all POI categories.")
 
 
             # #TODO: add additional data like regiostar or population
